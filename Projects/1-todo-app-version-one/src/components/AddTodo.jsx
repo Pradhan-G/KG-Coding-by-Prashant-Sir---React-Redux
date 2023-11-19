@@ -1,13 +1,30 @@
 import React, { useState } from "react";
 import { DatePicker, Input, Flex, Button } from "antd";
 import { ForwardOutlined } from "@ant-design/icons";
-
-const onChange = (date, dateString) => {
-  console.log(date, dateString);
-};
+import TodoItem from "./TodoItem";
 
 const AddTodo = () => {
-  const [change, setChange] = useState("");
+  const [changeInput, setChangeInput] = useState("");
+  let [changeDate, setChangeDate] = useState("");
+  const [arr, setArr] = useState([]);
+  const obj = {
+    key: arr.length,
+    todo: changeInput,
+    date: changeDate,
+    remove: <button className=" btn btn-danger">remove</button>,
+  };
+
+  function handleAdd() {
+    arr.push(obj);
+    setArr([...arr]);
+    console.log(arr);
+    setChangeInput("");
+  }
+
+  const datePickerChange = (date, dateString) => {
+    setChangeDate(dateString);
+  };
+
   return (
     <>
       <div className="container text-center">
@@ -17,19 +34,27 @@ const AddTodo = () => {
               size="default"
               placeholder="Enter ToDo Here"
               prefix={<ForwardOutlined />}
-              value={change}
-              onChange={(e) => setChange(e.target.value)}
+              value={changeInput}
+              onChange={(e) => setChangeInput(e.target.value)}
             />
           </div>
           <div className="col-4">
-            <DatePicker onChange={onChange} />
+            <DatePicker onChange={datePickerChange} />
           </div>
           <div className="col-2">
             <Flex gap="small" wrap="wrap">
-              <Button type="primary">Add</Button>
+              <Button
+                type="primary"
+                onClick={() => {
+                  handleAdd();
+                }}
+              >
+                Add
+              </Button>
             </Flex>
           </div>
         </div>
+        <TodoItem obj={arr} />
       </div>
     </>
   );
